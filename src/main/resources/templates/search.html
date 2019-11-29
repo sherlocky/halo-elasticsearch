@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.min.css">
+    <link href="/css/search.css" rel="stylesheet">
+    <title>博客搜索</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+    <a class="navbar-brand" href="http://gblog.sherlocky.com">
+        <img src="/img/sherlocky.png" width="30" height="30" alt="S">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="http://gblog.sherlocky.com">Blog</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="http://s.gblog.sherlocky.com/">Search</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sync
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="javascript:;" id="btn-store2es">Store2ES</a>
+                    <a class="dropdown-item" href="javascript:;" id="btn-delete-from-es">DelFromES</a>
+                </div>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="http://gblog.sherlocky.com/tags">Tags</a>
+            </li>
+        </ul>
+        <span class="navbar-text">
+                <a href='https://gitee.com/sherlocky/halo-elasticsearch'><img src='https://gitee.com/sherlocky/halo-elasticsearch/widgets/widget_5.svg' alt='Fork me on Gitee'></img></a>
+            </span>
+    </div>
+</nav>
+<div class="row" id="search-div">
+    <div class="col-sm-10 offset-sm-1">
+        <div class="card">
+            <div class="card-body">
+                <nav class="navbar navbar-light bg-light">
+                    <div class="form-inline">
+                        <input id="search-input" class="form-control mr-sm-2" type="search" placeholder="关键字" aria-label="关键字">
+                        <button id="search-btn" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </div>
+                </nav>
+                <div id="search-result-container">
+                </div>
+                <div id="pagination-container"></div>
+            </div>
+            <div th:if="${updatetime > 0}" class="card-footer text-muted text-center" id="dateline-container">
+                最后更新于：[[${#dates.format(updatetime, 'yyyy-MM-dd HH:mm:ss')}]]
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/popper.js/1.14.6/umd/popper.min.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/juicer/0.6.15/juicer-min.js"></script>
+<script src="/pagination/pagination.js"></script>
+<script type="text/juicer" id="searchResultTpl">
+    {@each posts as post}
+        <div class="card">
+            <div class="card-header">
+                <a href="${blogServer}${post.url}" target="_blank">$${post.title}</a>
+            </div>
+            <div class="card-body">
+                    <p>{@if post.content == null}{@else}$${post.content}{@/if}</p>
+                    <p class="card-text">
+                        <small class="text-muted">发布于：${post.publishedAt|formatDate}</small>
+                        <small class="text-muted">最后更新于：${post.updatedAt|formatDate}</small>
+                    </p>
+                    <footer class="blockquote-footer">
+                        标签：
+                        {@each post.tagArr as tag, index}
+                        <cite><a href="${blogServer}${blogTagPrefix}${tag}" target="_blank">${tag}</a></cite>
+                        {@if index < post.tagArr.length - 1}
+                            /
+                        {@/if}
+                        {@/each}
+                    </footer>
+            </div>
+        </div>
+    {@/each}
+</script>
+<script type="text/juicer" id="noResultTpl">
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">暂无搜索结果</h4>
+        <p>在上方的搜索框输入关键字，回车即可搜索~~</p>
+        <hr>
+        <p class="mb-0">使用 ES 实现的简单博客全文搜索</p>
+    </div>
+</script>
+<script type="text/juicer" id="loadingTpl">
+    <div class="spinner-border text-primary m-5" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</script>
+<script src="/js/global.js"></script>
+<script src="/js/search.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    Search.init([[${blogBaseUrl}]]);
+</script>
+</body>
+</html>
