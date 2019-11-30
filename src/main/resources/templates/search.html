@@ -93,7 +93,7 @@
                     <footer class="blockquote-footer">
                         标签：
                         {@each post.tagArr as tag, index}
-                        <cite><a href="${blogServer}${blogTagPrefix}${tagSlug}" target="_blank">${tagName}</a></cite>
+                        <cite><a href="${blogServer}${blogTagPrefix}${tag.tagSlug}" target="_blank">${tag.tagName}</a></cite>
                         {@if index < post.tagArr.length - 1}
                             /
                         {@/if}
