@@ -36,8 +36,8 @@ public class PostModel implements Serializable {
     @Field(type = FieldType.Text)
     private String tagSlugs;
     /** 访问量 */
-    @Field(type = FieldType.Long)
-    private Long visits;
+    @Field(type = FieldType.Integer)
+    private Integer visits;
 
     public PostModel() {
     }
@@ -117,11 +117,11 @@ public class PostModel implements Serializable {
         this.tagSlugs = tagSlugs;
     }
 
-    public Long getVisits() {
+    public Integer getVisits() {
         return visits;
     }
 
-    public void setVisits(Long visits) {
+    public void setVisits(Integer visits) {
         this.visits = visits;
     }
 }

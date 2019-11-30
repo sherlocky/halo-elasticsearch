@@ -182,7 +182,7 @@ public class PostEsService {
                     pm.setUrl((String) searchHit.getSourceAsMap().get("url"));
                     pm.setTags((String) searchHit.getSourceAsMap().get("tags"));
                     pm.setTagSlugs((String) searchHit.getSourceAsMap().get("tagSlugs"));
-                    pm.setVisits((Long) searchHit.getSourceAsMap().get("visits"));
+                    pm.setVisits((Integer) searchHit.getSourceAsMap().get("visits"));
                     pm.setPublishedAt((String) searchHit.getSourceAsMap().get("publishedAt"));
                     pm.setUpdatedAt((String) searchHit.getSourceAsMap().get("updatedAt"));
                     chunk.add(pm);
