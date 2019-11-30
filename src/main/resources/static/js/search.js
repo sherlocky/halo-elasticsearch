@@ -4,9 +4,12 @@ var Search = function () {
     // 日期格式显示长度
     var DATE_FORMAT_LEN = 19;
     // 博文地址
-    var BLOG_SERVER = "https://gblog.sherlocky.com/";
+    var BLOG_SERVER = "";
+    var BLOG_POSTS_URL_PREFIX = "/archives/"
     // 博客标签地址前缀
-    var BLOG_TAG_PREFIX = 'tag/';
+    var BLOG_TAG_URL_PREFIX = '/tags/';
+    // 博文编辑地址前缀
+    var BLOG_POSTS_EDIT_URL_PREFIX = "/admin/index.html#/posts/write?postId=";
 
     function bindEvents() {
         $("#search-input").keypress(function (e) {
@@ -118,16 +121,30 @@ var Search = function () {
             clearResult();
             return;
         }
+        // 处理标签名字和连接
         for (var i = 0; i < posts.length; i++) {
-            posts[i].tagArr = posts[i].tags ? posts[i].tags.split(",") : [];
+            posts[i].tagArr = [];
+            if (posts[i].tags) {
+                continue;
+                var _tagNames = posts[i].tags.split(","),
+                    _tagSlugs = posts[i].tagSlugs.split(",");
+                for (var j = 0; j < _tagNames.length; j++) {
+                    posts[i].tagArr[posts[i].tagArr.length] = {
+                        tagName: _tagNames[j],
+                        tagSlug: _tagSlugs[j]
+                    };
+                }
+            }
         }
         juicer.register("formatDate", formatDate);
         var searchResultTpl = document.getElementById('searchResultTpl').innerHTML;
-        console.log(searchResultTpl);
+        // console.log(searchResultTpl);
         $('#search-result-container').html(juicer(searchResultTpl, {
             posts: posts,
             blogServer: BLOG_SERVER,
-            blogTagPrefix: BLOG_TAG_PREFIX
+            postUrlPrefix: BLOG_POSTS_URL_PREFIX,
+            blogTagPrefix: BLOG_TAG_URL_PREFIX,
+            postEditPrefix: BLOG_POSTS_EDIT_URL_PREFIX
         }));
     }
 
@@ -140,7 +157,7 @@ var Search = function () {
 
     // 初始化
     function init(blogBaseUrl) {
-        BLOG_SERVER = blogBaseUrl || BLOG_SERVER;
+        BLOG_SERVER = blogBaseUrl;
         clearResult();
         bindEvents();
     }

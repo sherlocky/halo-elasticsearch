@@ -8,15 +8,17 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
 
 /**
- * Halo博文类
+ * Halo博文 DO 类
+ * 同时还是 ES 博文 DO 类
  *
  * @author: zhangcx
  * @date: 2019/1/26 16:30
  */
 @Document(indexName = "halo_posts", type = "post", shards = 1, replicas = 0, refreshInterval = "-1")
 public class PostModel implements Serializable {
-    private static final long serialVersionUID = 4751370280312955950L;
-    @Id // elasticsearch 注解
+    private static final long serialVersionUID = 433731869110457614L;
+    /** elasticsearch 注解 */
+    @Id
     @Field(type = FieldType.Text)
     private String id;
     @Field(type = FieldType.Text)
@@ -31,6 +33,11 @@ public class PostModel implements Serializable {
     private String updatedAt;
     @Field(type = FieldType.Text)
     private String tags;
+    @Field(type = FieldType.Text)
+    private String tagSlugs;
+    /** 访问量 */
+    @Field(type = FieldType.Long)
+    private Long visits;
 
     public PostModel() {
     }
@@ -100,5 +107,21 @@ public class PostModel implements Serializable {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public String getTagSlugs() {
+        return tagSlugs;
+    }
+
+    public void setTagSlugs(String tagSlugs) {
+        this.tagSlugs = tagSlugs;
+    }
+
+    public Long getVisits() {
+        return visits;
+    }
+
+    public void setVisits(Long visits) {
+        this.visits = visits;
     }
 }

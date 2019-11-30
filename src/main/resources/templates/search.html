@@ -14,16 +14,16 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
-    <a class="navbar-brand" href="http://gblog.sherlocky.com">
+    <a class="navbar-brand" href="http://halo.sherlocky.com">
         <img src="/img/sherlocky.png" width="30" height="30" alt="S">
     </a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="http://gblog.sherlocky.com">Blog</a>
+                <a class="nav-link" href="${blogBaseUrl}">Blog</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="http://s.gblog.sherlocky.com/">Search</a>
+                <a class="nav-link" href="http://s.halo.sherlocky.com">Search</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -35,7 +35,7 @@
                 </div>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="http://gblog.sherlocky.com/tags">Tags</a>
+                <a class="nav-link" href="${blogBaseUrl}/admin/index.html#/tags">Tags</a>
             </li>
         </ul>
         <span class="navbar-text">
@@ -74,18 +74,26 @@
     {@each posts as post}
         <div class="card">
             <div class="card-header">
-                <a href="${blogServer}${post.url}" target="_blank">$${post.title}</a>
+                <ul class="nav nav-pills card-header-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" href="${blogServer}${postUrlPrefix}${post.url}" target="_blank">$${post.title}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${blogServer}${postEditPrefix}${post.id}" target="_blank">编辑</a>
+                    </li>
+                </ul>
             </div>
             <div class="card-body">
                     <p>{@if post.content == null}{@else}$${post.content}{@/if}</p>
                     <p class="card-text">
                         <small class="text-muted">发布于：${post.publishedAt|formatDate}</small>
                         <small class="text-muted">最后更新于：${post.updatedAt|formatDate}</small>
+                        <small class="text-muted">热度：${post.visits}</small>
                     </p>
                     <footer class="blockquote-footer">
                         标签：
                         {@each post.tagArr as tag, index}
-                        <cite><a href="${blogServer}${blogTagPrefix}${tag}" target="_blank">${tag}</a></cite>
+                        <cite><a href="${blogServer}${blogTagPrefix}${tagSlug}" target="_blank">${tagName}</a></cite>
                         {@if index < post.tagArr.length - 1}
                             /
                         {@/if}

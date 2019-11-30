@@ -26,20 +26,21 @@ public interface PostDAO {
      * <p>如果实例对象中的属性名和数据表中字段名不一致，可以用 @Result注解进行说明映射关系</p>
      * @return
      */
-    @Select("SELECT posts.id, posts.title, posts.slug, posts.markdown, posts.published_at, posts.updated_at, GROUP_CONCAT(tags.name) AS tags " +
+    @Select("SELECT posts.id, posts.title, posts.url, posts.original_content, posts.create_time, posts.update_time, posts.visits, GROUP_CONCAT(tags.name) AS tags, GROUP_CONCAT(tags.slug_name) AS tag_slugs " +
             "FROM posts " +
-            "LEFT JOIN posts_tags ON posts.id=posts_tags.post_id " +
-            "LEFT JOIN tags ON posts_tags.tag_id=tags.id " +
-            // "where posts.status='published' " +
+            "LEFT JOIN post_tags ON posts.id=post_tags.post_id " +
+            "LEFT JOIN tags ON post_tags.tag_id=tags.id " +
+            // "where posts.status='0' " +
             "GROUP BY posts.id " +
-            "order by posts.updated_at desc")
+            "order by posts.update_time desc")
     @Results(id = "postMap", value = {
             @Result(property = "title", column = "title"),
-            @Result(property = "url", column = "slug"),
-            @Result(property = "content", column = "markdown"),
-            @Result(property = "publishedAt", column = "published_at"),
-            @Result(property = "updatedAt", column = "updated_at"),
-            @Result(property = "tags", column = "tags")
+            @Result(property = "url", column = "url"),
+            @Result(property = "content", column = "original_content"),
+            @Result(property = "publishedAt", column = "create_time"),
+            @Result(property = "updatedAt", column = "update_time"),
+            @Result(property = "tags", column = "tags"),
+            @Result(property = "tagSlugs", column = "tag_slugs")
     })
     List<PostModel> list();
 
@@ -50,10 +51,10 @@ public interface PostDAO {
      * @return
      */
     @Select("<script>" +
-            "SELECT posts.id, posts.title, posts.slug, posts.markdown, posts.published_at, posts.updated_at, GROUP_CONCAT(tags.name) AS tags " +
+            "SELECT posts.id, posts.title, posts.url, posts.original_content, posts.create_time, posts.update_time, posts.visits, GROUP_CONCAT(tags.name) AS tags, GROUP_CONCAT(tags.slug_name) AS tag_slugs " +
             "FROM posts " +
-            "LEFT JOIN posts_tags ON posts.id=posts_tags.post_id " +
-            "LEFT JOIN tags ON posts_tags.tag_id=tags.id " +
+            "LEFT JOIN post_tags ON posts.id=post_tags.post_id " +
+            "LEFT JOIN tags ON post_tags.tag_id=tags.id " +
             "where posts.id in " +
             "<foreach collection='ids' open='(' close=')' separator=',' item='id'>" +
             "'${id}'" +
@@ -63,10 +64,10 @@ public interface PostDAO {
     @ResultMap(value = "postMap")
     List<PostModel> listByIds(@Param("ids") List<String> ids);
 
-    @Select("SELECT posts.id, posts.title, posts.slug, posts.markdown, posts.published_at, posts.updated_at, GROUP_CONCAT(tags.name) AS tags " +
+    @Select("SELECT posts.id, posts.title, posts.url, posts.original_content, posts.create_time, posts.update_time, posts.visits, GROUP_CONCAT(tags.name) AS tags, GROUP_CONCAT(tags.slug_name) AS tag_slugs " +
             "FROM posts " +
-            "LEFT JOIN posts_tags ON posts.id=posts_tags.post_id " +
-            "LEFT JOIN tags ON posts_tags.tag_id=tags.id " +
+            "LEFT JOIN post_tags ON posts.id=post_tags.post_id " +
+            "LEFT JOIN tags ON post_tags.tag_id=tags.id " +
             "WHERE posts.id = #{id} GROUP BY posts.id")
     @ResultMap(value = "postMap")
     PostModel get(String id);

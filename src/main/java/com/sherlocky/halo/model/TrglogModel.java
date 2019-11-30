@@ -1,7 +1,7 @@
 package com.sherlocky.halo.model;
 
 /**
- * 触发器日志类
+ * 触发器日志 DO 类
  * @author: zhangcx
  * @date: 2019/1/26 17:57
  */
