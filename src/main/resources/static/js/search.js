@@ -125,7 +125,6 @@ var Search = function () {
         for (var i = 0; i < posts.length; i++) {
             posts[i].tagArr = [];
             if (posts[i].tags) {
-                continue;
                 var _tagNames = posts[i].tags.split(","),
                     _tagSlugs = posts[i].tagSlugs.split(",");
                 for (var j = 0; j < _tagNames.length; j++) {
